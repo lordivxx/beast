@@ -12,6 +12,8 @@ import sys
 import random
 import argparse
 import ConfigParser
+#import libbeast
+from IVXX import IVXX
 
 
 
@@ -25,28 +27,27 @@ args = parser.parse_args()
 ######## Assign Variables  ######
 charactercfg = args.charactercfg
 
-
 ######## Functions #########
-def attack(hp,atk,df):
-    while hp > 0:
-        hp = hp - random.randint(1, int(atk))
-        print(hp)
-
-
-def fight(bhp,batk,mhp,matk):
-    while bhp > 0 and mhp > 0:
-        bhp = int(bhp) - random.randint(1, int(matk))
-        mhp = int(mhp) - random.randint(1, int(batk))
-        print (bhp,mhp)
-
-def logthis(name,value):
-    logname = 'log/{0}.log'.format(int(starttime))
-    logdata = '{0}:{1}'.format(str(name), str(value))
-    f=open(logname, "a+")
-    f.write("%s\r\n" % (logdata))
-    #print(logdata)
-    f.close()
-
+#def attack(hp,atk,df):
+#    while hp > 0:
+#        hp = hp - random.randint(1, int(atk))
+#        print(hp)
+#
+#
+#def fight(bhp,batk,mhp,matk):
+#    while bhp > 0 and mhp > 0:
+#        bhp = int(bhp) - random.randint(1, int(matk))
+#        mhp = int(mhp) - random.randint(1, int(batk))
+#        print (bhp,mhp)
+#
+#def logthis(name,value):
+#    logname = 'log/{0}.log'.format(int(starttime))
+#    logdata = '{0}:{1}'.format(str(name), str(value))
+#    f=open(logname, "a+")
+#    f.write("%s\r\n" % (logdata))
+#    #print(logdata)
+#    f.close()
+#
 def ConfigSectionMap(section):
     dict1 = {}
     options = Config.options(section)
@@ -63,15 +64,19 @@ def ConfigSectionMap(section):
 
 ########## Main Code ##########
 if __name__ == '__main__':
+    x = IVXX("beast")
     ## Start timing
-    starttime = time.time()
-    logthis('commandline', sys.argv)
+    x.inittime()
+    x.logthis('commandline', sys.argv)
+    x.authcheck()
+    #x.menu()
+
 
     ## Reads in the config file that was givin and stores some values from it
     Config = ConfigParser.ConfigParser()
     Config.read(charactercfg)
-    for options in Config.sections():
-        logthis('options', Config.options(options))
+    #for options in Config.sections():
+    #    logthis('options', Config.options(options))
     beast_name = ConfigSectionMap("Main")['name']
     beast_hp = ConfigSectionMap("Main")['hp']
     beast_atk = ConfigSectionMap("Main")['atk']
@@ -79,4 +84,4 @@ if __name__ == '__main__':
     print('Welcome Back {0}'.format(str(beast_name)))
     print('You have {0} HP, {1} Attack Power, and {2} Defence.'.format(str(beast_hp),str(beast_atk),str(beast_def)))
     #attack(int(beast_hp),int(beast_atk),int(beast_def))
-    fight(beast_hp,beast_atk,100,2)
+    x.fight(beast_hp,beast_atk,100,2)
