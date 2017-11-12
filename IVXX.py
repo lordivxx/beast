@@ -13,7 +13,6 @@ import random
 import argparse
 import ConfigParser
 import textwrap
-import libbeast
 
 authon = False
 #authon = True
@@ -31,9 +30,9 @@ class IVXX(object):
 		input = raw_input(question) 
 		return input
 
-	def greet(self):
-		print "\n" * 10
-		print "Welcome " + self.name + " would you like to play a game? "		
+	def report(self):
+                print('Welcome {1} and {0}'.format(str(self.beast_name), str(self.name)))
+                print('You have {0} HP, {1} Attack Power, and {2} Defence.'.format(str(self.beast_hp),str(self.beast_atk),str(self.beast_def)))
 
 	def send_output(self,data):
 		self.output = data
@@ -62,11 +61,12 @@ class IVXX(object):
        		 print(hp)
 
 
-	def fight(self,bhp,batk,mhp,matk):
+	def fight(self,bhp,batk,bdef,mhp,matk,mdef):
 	    while bhp > 0 and mhp > 0:
-	        bhp = int(bhp) - random.randint(1, int(matk))
-	        mhp = int(mhp) - random.randint(1, int(batk))
+	        bhp = int(bhp) - random.randint(1, int(matk)) + int(bdef)
+	        mhp = int(mhp) - random.randint(1, int(batk)) + int(mdef)
 	        print (bhp,mhp)
+            return bhp,mhp
 
 	def logthis(self,name,value):
 	    logname = 'log/beast.log'
@@ -78,16 +78,32 @@ class IVXX(object):
 
 	def ConfigSectionMap(self,section):
 	    dict1 = {}
-	    options = Config.options(section)
-	    for option in options:
+	    self.options = self.Config.options(section)
+	    for option in self.options:
 	        try:
-	            dict1[option] = Config.get(section, option)
+	            dict1[option] = self.Config.get(section, option)
 	            if dict1[option] == -1:
 	                DebugPrint("skip: %s" % option)
 	        except:
 	            print("exception on %s!" % option)
 	            dict1[option] = None
 	    return dict1
+
+        def loadconfig(self):
+            self.charactercfg = "character.cfg"
+            self.Config = ConfigParser.ConfigParser()
+	    self.Config.read(self.charactercfg)
+	    for self.options in self.Config.sections():
+	        self.logthis('options', self.Config.options(self.options))
+	    #global beast_name
+	    self.beast_name = self.ConfigSectionMap("Main")['name']
+	    #global beast_hp
+	    self.beast_hp = self.ConfigSectionMap("Main")['hp']
+	    #global beast_atk
+	    self.beast_atk = self.ConfigSectionMap("Main")['atk']
+	    #global beast_def
+	    self.beast_def = self.ConfigSectionMap("Main")['def']
+ 
 
         def inittime(self):
             self.starttime = time.time() 
@@ -98,32 +114,22 @@ class IVXX(object):
 	def menu(self):
 		print textwrap.dedent("""\
 		### Menu ###
-		1. Count
-		2. Ask Pass
-		3. Greet
-		4. Report Status
+		1. Report
+		2. Fight
 		q. Quit
 		############
 		""")
 		choice = self.get_user_input("Where to Sir: ")
 		if choice == "1":
-			self.count_out_loud()
+			self.report()
+			self.menu()
 		elif choice == "2":
-			if self.ask_pass("test") == True:
-				print "You Pass!" 
-			else:
-				print "Incorrect Sir!! I bid you Good Day!"
-		elif choice == "3":
-			self.greet()
-		elif choice == "4":
-			print "\n" * 20
-			print "Gathering data now ..."
-			print "\n" * 20
-			self.fight(100,2,100,2)	
+			self.fight(self.beast_hp,self.beast_atk,self.beast_def,100,2,1)	
+			self.menu()
 		elif choice == "q":
 			exit()	
 		else:
-			x.menu()
+			self.menu()
 
 
 	def authcheck(self):
