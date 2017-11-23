@@ -25,8 +25,8 @@ args = parser.parse_args()
 
 ######## Assign Variables  ######
 charactercfg = args.charactercfg
-if charactercfg = "":
-    charactercfg = character.cfg
+if charactercfg == "":
+    charactercfg = "./character.cfg"
 
 ######## Functions #########
 
@@ -45,5 +45,8 @@ if __name__ == '__main__':
     x.report()
 
     x.authcheck()
-    x.menu()
+    conn = x.dodatabase()
+    x.dbreport(conn)
+    x.dbfight(conn)
+    #x.menu()
 
