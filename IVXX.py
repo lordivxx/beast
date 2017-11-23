@@ -89,10 +89,10 @@ class IVXX(object):
 	            dict1[option] = None
 	    return dict1
 
-        def loadconfig(self):
-            self.charactercfg = "character.cfg"
+        def loadconfig(self,charactercfg):
+           # charactercfg = "character.cfg"
             self.Config = ConfigParser.ConfigParser()
-	    self.Config.read(self.charactercfg)
+	    self.Config.read(charactercfg)
 	    for self.options in self.Config.sections():
 	        self.logthis('options', self.Config.options(self.options))
 	    #global beast_name

@@ -25,6 +25,8 @@ args = parser.parse_args()
 
 ######## Assign Variables  ######
 charactercfg = args.charactercfg
+if charactercfg = "":
+    charactercfg = character.cfg
 
 ######## Functions #########
 
@@ -39,7 +41,7 @@ if __name__ == '__main__':
 
 
     #x.fight(beast_hp,beast_atk,100,2)
-    x.loadconfig()
+    x.loadconfig(charactercfg)
     x.report()
 
     x.authcheck()
