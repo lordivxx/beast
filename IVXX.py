@@ -142,35 +142,42 @@ class IVXX(object):
 
 
 	def menu(self,conn):
-		print textwrap.dedent("""\
-		### Menu ###
-		1. Report
-		2. Fight
-		3. Adventure
-		4. Use small health potion (200 HP)
-		q. Quit
+		print("") 
+		print("Report:1 Fight:2 Adventure:3 Heal:4 Quit:q") 
+                ### Menu ###
+		#1. Report
+		#2. Fight
+		#3. Adventure
+		#4. Use small health potion (200 HP)
+		#q. Quit
 		############
-
-		""")
-		choice = self.get_user_input("Where to Sir: ")
+		#""")
+		choice = self.get_user_input("Choose: ")
+                print("")
 		if choice == "1":
+                        os.system('clear')
 			self.dbreport(conn)
 			self.menu(conn)
 		elif choice == "2":
+                        os.system('clear')
 			self.dbfight(conn)	
 			self.menu(conn)
 		elif choice == "3":
-			self.adventure(conn,10,35)	
+			os.system('clear')
+                        self.adventure(conn,10,35)	
 			self.menu(conn)
 		elif choice == "4":
-			self.visit_healer(conn,200)	
+			os.system('clear')
+                        self.visit_healer(conn,200)	
 			self.menu(conn)
 		elif choice == "q":
                         self.commit_db(conn)
                         self.close_db(conn)
-			exit()	
+			os.system('clear')
+                        exit()	
 		else:
-			self.menu(conn)
+			os.system('clear')
+                        self.menu(conn)
 
 
 	def authcheck(self):
@@ -310,6 +317,7 @@ class IVXX(object):
 
         def adventure(self,conn,adv_time_lenght,mob_density):
             adv_time = 1
+            self.clear_terminal()
             while adv_time != adv_time_lenght:
                 if self.check_for_action(int(mob_density)) == 1:
                     print("You hear something!")
@@ -331,3 +339,5 @@ class IVXX(object):
                 adv_time += 1
 
  
+        def clear_terminal(self):
+            os.system('clear')
