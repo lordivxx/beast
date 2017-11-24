@@ -72,7 +72,7 @@ if __name__ == '__main__':
     x.dbreport(conn)
     #x.dbfight(conn)
     #x.update_charcter_stat(conn,'hp',100)
-    x.adventure(conn,10)
+    x.adventure(conn,120,2)
     x.dbreport(conn)
     x.close_db(conn)
 

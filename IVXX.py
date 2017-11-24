@@ -160,7 +160,7 @@ class IVXX(object):
 			self.dbfight(conn)	
 			self.menu(conn)
 		elif choice == "3":
-			self.adventure(conn,10)	
+			self.adventure(conn,10,35)	
 			self.menu(conn)
 		elif choice == "4":
 			self.visit_healer(conn,200)	
@@ -308,10 +308,10 @@ class IVXX(object):
                 return action_is_go
             return action_is_go
 
-        def adventure(self,conn,adv_time_lenght):
+        def adventure(self,conn,adv_time_lenght,mob_density):
             adv_time = 1
             while adv_time != adv_time_lenght:
-                if self.check_for_action(35) == 1:
+                if self.check_for_action(int(mob_density)) == 1:
                     print("You hear something!")
                     time.sleep(2)
                     print(self.mob_name)
@@ -320,7 +320,13 @@ class IVXX(object):
 
                 #print(self.check_for_action(5))
                 print('\ \\')
+                if self.check_for_action(int(1)) == 1: 
+                    self.visit_healer(conn,200)
+                    print('{0} finds a potion of revenenation and drinks it.'.format(str(self.select_character_stat(conn,'name'))))
+                    print('Your beast now has {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_character_stat(conn,'hp')),int(self.select_character_stat(conn,'atk')),int(self.select_character_stat(conn,'def'))))
+                    print(':')
                 print('/ /')
+                    
                 time.sleep(1)
                 adv_time += 1
 
