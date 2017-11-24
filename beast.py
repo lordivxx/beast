@@ -13,6 +13,7 @@ import random
 import argparse
 import ConfigParser
 from IVXX import IVXX
+import signal
 
 
 
@@ -30,10 +31,10 @@ args = parser.parse_args()
 ######## Assign Variables  ######
 charactercfg = args.charactercfg
 if charactercfg == None:
-    charactercfg = "character.cfg"
+    charactercfg = "/rhome/forsythc/.character.cfg"
 mobcfg = args.mobcfg
 if mobcfg == None:
-    mobcfg = "mob.cfg"
+    mobcfg = "/rhome/forsythc/.mob.cfg"
 
 dbinit = args.dbinit
 interactive = args.interactive
@@ -41,6 +42,10 @@ fight_function = args.fight_function
 if fight_function == None:
     fight_unction = 'n'
 ######## Functions #########
+def signal_handler(signal, frame):
+    print('You pressed Ctrl+C!')
+    sys.exit(0)
+
 
 
 ########## Main Code ##########
@@ -48,6 +53,7 @@ if __name__ == '__main__':
     
     # Load the class
     x = IVXX(os.environ['USER'],fight_function)
+    signal.signal(signal.SIGINT, signal_handler)
 
 
     ## Start timing
@@ -72,7 +78,7 @@ if __name__ == '__main__':
     x.dbreport(conn)
     #x.dbfight(conn)
     #x.update_charcter_stat(conn,'hp',100)
-    x.adventure(conn,120,2)
+    x.adventure(conn,120,70)
     x.dbreport(conn)
     x.close_db(conn)
 

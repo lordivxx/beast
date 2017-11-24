@@ -15,6 +15,7 @@ import ConfigParser
 import textwrap
 import sqlite3
 from sqlite3 import Error
+import signal
 
 authon = False
 #authon = True
@@ -94,7 +95,7 @@ class IVXX(object):
                 self.commit_db(conn)
 
 	def logthis(self,name,value):
-	    logname = 'log/beast.log'
+	    logname = '/rhome/forsythc/repos/beast/log/beast.log'
 	    logdata = '{0}:{1}'.format(str(name), str(value))
 	    f=open(logname, "a+")
 	    f.write("%s\r\n" % (logdata))
@@ -191,7 +192,7 @@ class IVXX(object):
  
 	def create_connection(self):
 	    try:
-                dbfile = "beast.db"
+                dbfile = "/rhome/forsythc/repos/beast/beast.db"
 	        conn = sqlite3.connect(dbfile)
 	        #conn = sqlite3.connect(':memory:')
 	        return conn
