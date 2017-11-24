@@ -23,8 +23,10 @@ class IVXX(object):
 
 	number = 4.2
 
-	def __init__(self,name):
+
+	def __init__(self,name,fight_function):
 		self.name = name 
+		self.fight_function = fight_function 
 		self.output = ""
 		return 
 
@@ -83,10 +85,13 @@ class IVXX(object):
                 while bhp > 0 and mhp > 0:
 	            bhp = int(bhp) - random.randint(1, int(matk)) + int(bdef)
 	            mhp = int(mhp) - random.randint(1, int(batk)) + int(mdef)
-                    #print (bhp,batk,bdef,mhp,matk,mdef)
+                #    print (bhp,batk,bdef,mhp,matk,mdef)
                     hitcount += 1
                     print ('{0} ---  Beast health:{1} - Mob Health:{2}'.format(hitcount, bhp, mhp))
+                if self.fight_function != 'y':
+                    self.update_charcter_stat(conn,'hp',bhp)
                 #return bhp,mhp
+                self.commit_db(conn)
 
 	def logthis(self,name,value):
 	    logname = 'log/beast.log'
@@ -109,20 +114,25 @@ class IVXX(object):
 	            dict1[option] = None
 	    return dict1
 
-        def loadconfig(self,charactercfg):
-           # charactercfg = "character.cfg"
+        def load_character_config(self,charactercfg):
             self.Config = ConfigParser.ConfigParser()
 	    self.Config.read(charactercfg)
 	    for self.options in self.Config.sections():
 	        self.logthis('options', self.Config.options(self.options))
-	    #global beast_name
 	    self.beast_name = self.ConfigSectionMap("Main")['name']
-	    #global beast_hp
 	    self.beast_hp = self.ConfigSectionMap("Main")['hp']
-	    #global beast_atk
 	    self.beast_atk = self.ConfigSectionMap("Main")['atk']
-	    #global beast_def
 	    self.beast_def = self.ConfigSectionMap("Main")['def']
+ 
+        def load_mob_config(self,mobcfg):
+            self.Config = ConfigParser.ConfigParser()
+	    self.Config.read(mobcfg)
+	    for self.options in self.Config.sections():
+	        self.logthis('options', self.Config.options(self.options))
+	    self.mob_name = self.ConfigSectionMap("Main")['name']
+	    self.mob_hp = self.ConfigSectionMap("Main")['hp']
+	    self.mob_atk = self.ConfigSectionMap("Main")['atk']
+	    self.mob_def = self.ConfigSectionMap("Main")['def']
  
 
         def inittime(self):
@@ -131,33 +141,36 @@ class IVXX(object):
             
 
 
-	def menu(self):
+	def menu(self,conn):
 		print textwrap.dedent("""\
 		### Menu ###
 		1. Report
 		2. Fight
-		3. Database
+		3. Adventure
+		4. Use small health potion (200 HP)
 		q. Quit
 		############
+
 		""")
 		choice = self.get_user_input("Where to Sir: ")
 		if choice == "1":
-			self.report()
-			self.menu()
+			self.dbreport(conn)
+			self.menu(conn)
 		elif choice == "2":
-			self.fight(self.beast_hp,self.beast_atk,self.beast_def,100,2,1)	
-			self.menu()
+			self.dbfight(conn)	
+			self.menu(conn)
 		elif choice == "3":
-			self.dodatabase()	
-			self.menu()
+			self.adventure(conn,10)	
+			self.menu(conn)
 		elif choice == "4":
-			self.dodatabase()	
-			self.dbfight(self.beast_hp,self.beast_atk,self.beast_def,100,2,1)	
-			self.menu()
+			self.visit_healer(conn,200)	
+			self.menu(conn)
 		elif choice == "q":
+                        self.commit_db(conn)
+                        self.close_db(conn)
 			exit()	
 		else:
-			self.menu()
+			self.menu(conn)
 
 
 	def authcheck(self):
@@ -171,12 +184,20 @@ class IVXX(object):
  
 	def create_connection(self):
 	    try:
-	        conn = sqlite3.connect(':memory:')
+                dbfile = "beast.db"
+	        conn = sqlite3.connect(dbfile)
+	        #conn = sqlite3.connect(':memory:')
 	        return conn
 	    except Error as e:
 	        print(e)
  
             return None
+
+        def commit_db(self,conn):
+            conn.commit()
+
+        def close_db(self,conn):
+            conn.close()
 
 	def create_table(self,conn,create_table_sql):
 	    try:
@@ -211,6 +232,14 @@ class IVXX(object):
 	        print(row)
  
  
+	def update_charcter_stat(self,conn,stat,statupdate):
+	    sql = "UPDATE character SET %s = %s " % (stat,statupdate)
+	    cur = conn.cursor()
+	    cur.execute(sql)
+
+	def visit_healer(self,conn,statupdate):
+            self.update_charcter_stat(conn,'hp',statupdate)
+
 	def select_character_stat(self,conn,stat):
 	    sql = "SELECT %s FROM character" % stat
 	    cur = conn.cursor()
@@ -253,31 +282,46 @@ class IVXX(object):
 	        self.create_table(conn, self.sql_create_character_table)
 	        self.create_table(conn, self.sql_create_mob_table)
 	        # create mob table
-	        #create_table(conn, sql_create_mob_table)
-	        #self.characterdetails = ('IVXX', 100, 2, 1, '1st character');
 	        self.characterdetails = (self.beast_name, self.beast_hp, self.beast_atk, self.beast_def, '1st character');
-	        self.mobdetails = ('Owl', 200, 2, 1, '1st mob');
+	        self.mobdetails = (self.mob_name, self.mob_hp, self.mob_atk, self.mob_def, '1st mob');
 	        self.character_id = self.create_character(conn, self.characterdetails)
 	        self.mob_id = self.create_mob(conn, self.mobdetails)
+                self.commit_db(conn)
 	    else:
 	        print("Error! cannot create the database connection.")
 
  
  
-	def dodatabase(self):
-
-	    conn = self.create_connection()
-	    with conn:
-	        self.create_database(conn)
-	        #select_all_character(conn)
-	        #self.select_character_stat(conn,'name')
-	        #self.select_mob_stat(conn,'name')
-            return conn
-
 	def dbreport(self,conn):
 
-	    with conn:
-	        self.select_character_stat(conn,'name')
-	        self.select_mob_stat(conn,'name')
+	    #with conn:
+            print('Welcome {1} and {0}'.format(str(self.select_character_stat(conn,'name')), str(self.name)))
+            print('Your beast has {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_character_stat(conn,'hp')),int(self.select_character_stat(conn,'atk')),int(self.select_character_stat(conn,'def'))))
+            print('There is a {3} here with {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_mob_stat(conn,'hp')),int(self.select_mob_stat(conn,'atk')),int(self.select_mob_stat(conn,'def')),str(self.select_mob_stat(conn,'name'))))
+	        #self.select_character_stat(conn,'name')
+	        #self.select_mob_stat(conn,'name')
+
+        def check_for_action(self,percent):
+            action_is_go = 0
+            if random.randint(0,100) < percent:
+                action_is_go = 1
+                return action_is_go
+            return action_is_go
+
+        def adventure(self,conn,adv_time_lenght):
+            adv_time = 1
+            while adv_time != adv_time_lenght:
+                if self.check_for_action(35) == 1:
+                    print("You hear something!")
+                    time.sleep(2)
+                    print(self.mob_name)
+                    time.sleep(2)
+                    self.dbfight(conn)
+
+                #print(self.check_for_action(5))
+                print('\ \\')
+                print('/ /')
+                time.sleep(1)
+                adv_time += 1
 
  

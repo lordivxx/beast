@@ -20,6 +20,10 @@ from IVXX import IVXX
 parser = argparse.ArgumentParser()
 requiredNamed = parser.add_argument_group('required named arguments')
 requiredNamed.add_argument("-c", "--charactercfg" , help='The path to a character config file', required=False)
+requiredNamed.add_argument("-m", "--mobcfg" , help='The path to a mob config file', required=False)
+requiredNamed.add_argument("-d", "--dbinit" , help='Init the db', required=False)
+requiredNamed.add_argument("-i", "--interactive" , help='interactive', required=False)
+requiredNamed.add_argument("-f", "--fight_function" , help='fight_function', required=False)
 args = parser.parse_args()
 
 
@@ -27,26 +31,50 @@ args = parser.parse_args()
 charactercfg = args.charactercfg
 if charactercfg == None:
     charactercfg = "character.cfg"
-print(charactercfg)
+mobcfg = args.mobcfg
+if mobcfg == None:
+    mobcfg = "mob.cfg"
+
+dbinit = args.dbinit
+interactive = args.interactive
+fight_function = args.fight_function
+if fight_function == None:
+    fight_unction = 'n'
 ######## Functions #########
 
 
 ########## Main Code ##########
 if __name__ == '__main__':
+    
     # Load the class
-    x = IVXX(os.environ['USER'])
+    x = IVXX(os.environ['USER'],fight_function)
+
+
     ## Start timing
     x.inittime()
     x.logthis('commandline', sys.argv)
 
 
-    #x.fight(beast_hp,beast_atk,100,2)
-    x.loadconfig(charactercfg)
-    x.report()
+    x.load_mob_config(mobcfg)
+    x.load_character_config(charactercfg)
+    #x.report()
 
     x.authcheck()
-    conn = x.dodatabase()
+    conn = x.create_connection()
+    if dbinit == 'y':
+        x.create_database(conn)
+        x.commit_db(conn)
+        x.close_db(conn)
+        exit()
+    if interactive == 'y':
+        x.menu(conn)
+        exit()
     x.dbreport(conn)
-    x.dbfight(conn)
+    #x.dbfight(conn)
+    #x.update_charcter_stat(conn,'hp',100)
+    x.adventure(conn,10)
+    x.dbreport(conn)
+    x.close_db(conn)
+
     #x.menu()
 
