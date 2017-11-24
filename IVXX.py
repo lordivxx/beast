@@ -79,11 +79,13 @@ class IVXX(object):
                 mhp = self.select_mob_stat(conn,'hp')
                 matk = self.select_mob_stat(conn,'atk')
                 mdef = self.select_mob_stat(conn,'def')
+                hitcount = 0
                 while bhp > 0 and mhp > 0:
 	            bhp = int(bhp) - random.randint(1, int(matk)) + int(bdef)
 	            mhp = int(mhp) - random.randint(1, int(batk)) + int(mdef)
                     #print (bhp,batk,bdef,mhp,matk,mdef)
-                    print ('Beast health:{0} - Mob Health:{1}'.format(bhp, mhp))
+                    hitcount += 1
+                    print ('{0} ---  Beast health:{1} - Mob Health:{2}'.format(hitcount, bhp, mhp))
                 #return bhp,mhp
 
 	def logthis(self,name,value):

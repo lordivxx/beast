@@ -25,9 +25,9 @@ args = parser.parse_args()
 
 ######## Assign Variables  ######
 charactercfg = args.charactercfg
-if charactercfg == "":
-    charactercfg = "./character.cfg"
-
+if charactercfg == None:
+    charactercfg = "character.cfg"
+print(charactercfg)
 ######## Functions #########
 
 
