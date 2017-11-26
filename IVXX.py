@@ -75,20 +75,28 @@ class IVXX(object):
             return bhp,mhp
 
 	def dbfight(self,conn):
+            if int(self.select_character_stat(conn,'hp')) <= 1:
+                self.character_dead(conn)
+            id = random.randint(1, 4)
+            print("You hear something!")
+            time.sleep(2)
+            print(self.select_mob_stat(conn,'name',id))
+            time.sleep(2)
             with conn:
                 bhp = self.select_character_stat(conn,'hp')
                 batk = self.select_character_stat(conn,'atk')
                 bdef = self.select_character_stat(conn,'def')
-                mhp = self.select_mob_stat(conn,'hp')
-                matk = self.select_mob_stat(conn,'atk')
-                mdef = self.select_mob_stat(conn,'def')
+                mname = self.select_mob_stat(conn,'name',id)
+                mhp = self.select_mob_stat(conn,'hp',id)
+                matk = self.select_mob_stat(conn,'atk',id)
+                mdef = self.select_mob_stat(conn,'def',id)
                 hitcount = 0
                 while bhp > 0 and mhp > 0:
 	            bhp = int(bhp) - random.randint(1, int(matk)) + int(bdef)
 	            mhp = int(mhp) - random.randint(1, int(batk)) + int(mdef)
-                #    print (bhp,batk,bdef,mhp,matk,mdef)
+                    #print (bhp,batk,bdef,mname,mhp,matk,mdef)
                     hitcount += 1
-                    print ('{0} ---  Beast health:{1} - Mob Health:{2}'.format(hitcount, bhp, mhp))
+                    print ('{0} ---  Beast health:{1} - {3} Health:{2}'.format(hitcount, bhp, mhp, mname))
                 if self.fight_function != 'y':
                     self.update_charcter_stat(conn,'hp',bhp)
                 #return bhp,mhp
@@ -257,8 +265,8 @@ class IVXX(object):
 	        #print(row[0])
                 return row[0]
 
-	def select_mob_stat(self,conn,stat):
-	    sql = "SELECT %s FROM mob" % stat
+	def select_mob_stat(self,conn,stat,id):
+	    sql = "SELECT %s FROM mob WHERE id = %s" % (stat,id)
 	    cur = conn.cursor()
 	    cur.execute(sql)
 	    rows = cur.fetchall()
@@ -303,9 +311,9 @@ class IVXX(object):
 	def dbreport(self,conn):
 
 	    #with conn:
-            print('Welcome {1} and {0}'.format(str(self.select_character_stat(conn,'name')), str(self.name)))
-            print('Your beast has {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_character_stat(conn,'hp')),int(self.select_character_stat(conn,'atk')),int(self.select_character_stat(conn,'def'))))
-            print('There is a {3} here with {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_mob_stat(conn,'hp')),int(self.select_mob_stat(conn,'atk')),int(self.select_mob_stat(conn,'def')),str(self.select_mob_stat(conn,'name'))))
+            print('Username: {1} and Beast: {0}'.format(str(self.select_character_stat(conn,'name')), str(self.name)))
+            print('{3} has {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_character_stat(conn,'hp')),int(self.select_character_stat(conn,'atk')),int(self.select_character_stat(conn,'def')),str(self.select_character_stat(conn,'name'))))
+            #print('There is a {3} in the area with {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_mob_stat(conn,'hp')),int(self.select_mob_stat(conn,'atk')),int(self.select_mob_stat(conn,'def')),str(self.select_mob_stat(conn,'name'))))
 	        #self.select_character_stat(conn,'name')
 	        #self.select_mob_stat(conn,'name')
 
@@ -320,11 +328,14 @@ class IVXX(object):
             adv_time = 1
             self.clear_terminal()
             while adv_time != adv_time_lenght:
+                if int(self.select_character_stat(conn,'hp')) <= 1:
+                    self.character_dead(conn)
+
                 if self.check_for_action(int(mob_density)) == 1:
-                    print("You hear something!")
-                    time.sleep(2)
-                    print(self.mob_name)
-                    time.sleep(2)
+                    #print("You hear something!")
+                    #time.sleep(2)
+                    #print(self.mob_name)
+                    #time.sleep(2)
                     self.dbfight(conn)
 
                 #print(self.check_for_action(5))
@@ -334,6 +345,8 @@ class IVXX(object):
                     print('{0} finds a potion of revenenation and drinks it.'.format(str(self.select_character_stat(conn,'name'))))
                     print('Your beast now has {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_character_stat(conn,'hp')),int(self.select_character_stat(conn,'atk')),int(self.select_character_stat(conn,'def'))))
                     print(':')
+                
+                
                 print('/ /')
                     
                 time.sleep(1)
@@ -342,3 +355,9 @@ class IVXX(object):
  
         def clear_terminal(self):
             os.system('clear')
+
+        def character_dead(self,conn):
+            print('{0} has become too weak and must return to town.'.format(str(self.select_character_stat(conn,'name'))))
+            self.menu(conn)
+
+
