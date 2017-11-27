@@ -78,12 +78,13 @@ if __name__ == '__main__':
     if interactive == 'y':
         x.menu(conn)
         exit()
-    x.dbreport(conn)
-    x.dbfight(conn)
+    #x.dbreport(conn)
+    #x.dbfight(conn)
     #x.update_charcter_stat(conn,'hp',100)
-    x.adventure(conn,120,5)
+    #x.adventure(conn,120,5)
     #x.select_mob_stat(conn,'name',1)
     x.dbreport(conn)
+    x.hud(conn)
     x.close_db(conn)
 
     #x.menu()

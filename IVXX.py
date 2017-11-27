@@ -188,6 +188,46 @@ class IVXX(object):
 			os.system('clear')
                         self.menu(conn)
 
+        def hud(self,conn):
+                mob_density = 50
+                while True:
+                    if self.check_for_action(int(mob_density)) == 1:
+                        self.dbfight(conn)
+                    print("North:w South:s West:a East:d")
+		    print("Report:1 Fight:2 Adventure:3 Heal:4 Quit:q") 
+		    choice = self.get_user_input("Choose: ")
+		    print("")
+		    if choice == "w":
+                       os.system('clear')
+                       print("moving North")
+                    elif choice == "s":
+                       os.system('clear')
+                       print("moving south")
+                    elif choice == "a":
+                       os.system('clear')
+                       print("moving west")
+                    elif choice == "d":
+                       os.system('clear')
+                       print("moving East")
+                    elif choice == "q":
+                       break
+                    elif choice == "d":
+                       os.system('clear')
+                       print("moving East")
+                    elif choice == "1":
+                       os.system('clear')
+                       self.dbreport(conn)
+                    elif choice == "2":
+                       os.system('clear')
+                       self.dbfight(conn)
+                    elif choice == "3":
+                       os.system('clear')
+                       self.adventure(conn,10,35)
+                    elif choice == "4":
+                       os.system('clear')
+                       self.visit_healer(conn,200)
+
+
 
 	def authcheck(self):
 		if authon == True:
@@ -359,5 +399,4 @@ class IVXX(object):
         def character_dead(self,conn):
             print('{0} has become too weak and must return to town.'.format(str(self.select_character_stat(conn,'name'))))
             self.menu(conn)
-
 
