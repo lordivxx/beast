@@ -150,7 +150,7 @@ class IVXX(object):
             
 
 
-	def menu(self,conn):
+	def rmenu(self,conn):
 		print("") 
 		print("Report:1 Fight:2 Adventure:3 Heal:4 Quit:q") 
                 ### Menu ###
@@ -189,10 +189,8 @@ class IVXX(object):
                         self.menu(conn)
 
         def hud(self,conn):
-                mob_density = 50
+                mob_density = 10
                 while True:
-                    if self.check_for_action(int(mob_density)) == 1:
-                        self.dbfight(conn)
                     print("North:w South:s West:a East:d")
 		    print("Report:1 Fight:2 Adventure:3 Heal:4 Quit:q") 
 		    choice = self.get_user_input("Choose: ")
@@ -200,20 +198,27 @@ class IVXX(object):
 		    if choice == "w":
                        os.system('clear')
                        print("moving North")
+                       if self.check_for_action(int(mob_density)) == 1:
+                         self.dbfight(conn)
                     elif choice == "s":
                        os.system('clear')
                        print("moving south")
+                       if self.check_for_action(int(mob_density)) == 1:
+                         self.dbfight(conn)
                     elif choice == "a":
                        os.system('clear')
                        print("moving west")
+                       if self.check_for_action(int(mob_density)) == 1:
+                          self.dbfight(conn)
                     elif choice == "d":
                        os.system('clear')
                        print("moving East")
+                       if self.check_for_action(int(mob_density)) == 1:
+                          self.dbfight(conn)
                     elif choice == "q":
+                       self.commit_db(conn)
+                       self.close_db(conn)
                        break
-                    elif choice == "d":
-                       os.system('clear')
-                       print("moving East")
                     elif choice == "1":
                        os.system('clear')
                        self.dbreport(conn)
@@ -398,5 +403,5 @@ class IVXX(object):
 
         def character_dead(self,conn):
             print('{0} has become too weak and must return to town.'.format(str(self.select_character_stat(conn,'name'))))
-            self.menu(conn)
+            #self.hud(conn)
 
