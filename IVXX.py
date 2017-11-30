@@ -103,7 +103,7 @@ class IVXX(object):
                 self.commit_db(conn)
 
 	def logthis(self,name,value):
-	    logname = '/rhome/forsythc/repos/beast/log/beast.log'
+	    logname = './log/beast.log'
 	    logdata = '{0}:{1}'.format(str(name), str(value))
 	    f=open(logname, "a+")
 	    f.write("%s\r\n" % (logdata))
