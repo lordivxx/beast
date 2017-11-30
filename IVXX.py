@@ -126,8 +126,8 @@ class IVXX(object):
         def load_character_config(self,charactercfg):
             self.Config = ConfigParser.ConfigParser()
 	    self.Config.read(charactercfg)
-	    for self.options in self.Config.sections():
-	        self.logthis('options', self.Config.options(self.options))
+	    #for self.options in self.Config.sections():
+	        #self.logthis('options', self.Config.options(self.options))
 	    self.beast_name = self.ConfigSectionMap("Main")['name']
 	    self.beast_hp = self.ConfigSectionMap("Main")['hp']
 	    self.beast_atk = self.ConfigSectionMap("Main")['atk']
@@ -136,8 +136,8 @@ class IVXX(object):
         def load_mob_config(self,mobcfg):
             self.Config = ConfigParser.ConfigParser()
 	    self.Config.read(mobcfg)
-	    for self.options in self.Config.sections():
-	        self.logthis('options', self.Config.options(self.options))
+	    #for self.options in self.Config.sections():
+	        #self.logthis('options', self.Config.options(self.options))
 	    self.mob_name = self.ConfigSectionMap("Main")['name']
 	    self.mob_hp = self.ConfigSectionMap("Main")['hp']
 	    self.mob_atk = self.ConfigSectionMap("Main")['atk']

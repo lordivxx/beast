@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     ## Start timing
     x.inittime()
-    x.logthis('commandline', sys.argv)
+    #x.logthis('commandline', sys.argv)
 
 
     x.load_mob_config(mobcfg)
