@@ -64,8 +64,8 @@ if __name__ == '__main__':
     #x.logthis('commandline', sys.argv)
 
 
-    x.load_mob_config(mobcfg)
-    x.load_character_config(charactercfg)
+    #x.load_mob_config(mobcfg)
+    #x.load_character_config(charactercfg)
     #x.report()
 
     x.authcheck()
