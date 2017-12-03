@@ -250,7 +250,7 @@ class IVXX(object):
  
 	def create_connection(self):
 	    try:
-                dbfile = "/home/pi/repos/beast/beast.db"
+                dbfile = "{0}/repos/beast/beast.db".format(os.environ['HOME'])
 	        conn = sqlite3.connect(dbfile)
 	        #conn = sqlite3.connect(':memory:')
 	        return conn
