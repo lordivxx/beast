@@ -78,11 +78,14 @@ class IVXX(object):
             if int(self.select_character_stat(conn,'hp')) <= 1:
                 self.character_dead(conn)
 		return
-            id = random.randint(1, 4)
+            if random.randint(1,100) == 42:
+                id = 4
+            else:
+                id = random.randint(1, 3)
             print("You hear something!")
-            time.sleep(2)
+            time.sleep(1)
             print(self.select_mob_stat(conn,'name',id))
-            time.sleep(2)
+            time.sleep(1)
             with conn:
                 bname = self.select_character_stat(conn,'name')
                 bhp = self.select_character_stat(conn,'hp')
