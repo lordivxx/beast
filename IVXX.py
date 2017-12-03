@@ -77,6 +77,7 @@ class IVXX(object):
 	def dbfight(self,conn):
             if int(self.select_character_stat(conn,'hp')) <= 1:
                 self.character_dead(conn)
+		return
             id = random.randint(1, 4)
             print("You hear something!")
             time.sleep(2)
@@ -380,6 +381,7 @@ class IVXX(object):
             while adv_time != adv_time_lenght:
                 if int(self.select_character_stat(conn,'hp')) <= 1:
                     self.character_dead(conn)
+                    return
 
                 if self.check_for_action(int(mob_density)) == 1:
                     #print("You hear something!")
@@ -408,5 +410,6 @@ class IVXX(object):
 
         def character_dead(self,conn):
             print('{0} has become too weak and must return to town.'.format(str(self.select_character_stat(conn,'name'))))
-            self.hud(conn)
+            #self.hud(conn)
+            #RETURN false
 
