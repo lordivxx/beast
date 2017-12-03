@@ -83,6 +83,7 @@ class IVXX(object):
             print(self.select_mob_stat(conn,'name',id))
             time.sleep(2)
             with conn:
+                bname = self.select_character_stat(conn,'name')
                 bhp = self.select_character_stat(conn,'hp')
                 batk = self.select_character_stat(conn,'atk')
                 bdef = self.select_character_stat(conn,'def')
@@ -100,6 +101,10 @@ class IVXX(object):
                 if self.fight_function != 'y':
                     self.update_charcter_stat(conn,'hp',bhp)
                 #return bhp,mhp
+		if bhp > mhp:
+		    print ('{0} wins'.format(bname))
+		if mhp > bhp:
+		    print ('{0} wins'.format(mname))
                 self.commit_db(conn)
 
 	def logthis(self,name,value):
@@ -245,7 +250,7 @@ class IVXX(object):
  
 	def create_connection(self):
 	    try:
-                dbfile = "/rhome/forsythc/repos/beast/beast.db"
+                dbfile = "/home/pi/repos/beast/beast.db"
 	        conn = sqlite3.connect(dbfile)
 	        #conn = sqlite3.connect(':memory:')
 	        return conn
@@ -403,5 +408,5 @@ class IVXX(object):
 
         def character_dead(self,conn):
             print('{0} has become too weak and must return to town.'.format(str(self.select_character_stat(conn,'name'))))
-            #self.hud(conn)
+            self.hud(conn)
 
