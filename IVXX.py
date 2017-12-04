@@ -448,7 +448,7 @@ class IVXX(object):
 		        self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
                         self.room_run_script(conn,self.roomid)
                    else:
-                        print("This is the edge of the map")
+                        self.report_edge() 
 
                 elif choice == "s":
                    os.system('clear')
@@ -460,7 +460,7 @@ class IVXX(object):
 		        self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
                         self.room_run_script(conn,self.roomid)
                    else:
-                        print("This is the edge of the map")
+                        self.report_edge() 
  
                 elif choice == "a":
                    os.system('clear')
@@ -472,7 +472,7 @@ class IVXX(object):
 		        self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
                         self.room_run_script(conn,self.roomid)
                    else:
-                        print("This is the edge of the map")
+                        self.report_edge() 
  
                 elif choice == "d":
                    os.system('clear')
@@ -484,14 +484,26 @@ class IVXX(object):
 		        self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
                         self.room_run_script(conn,self.roomid)
                    else:
-                        print("This is the edge of the map")
- 
+                        self.report_edge() 
                 elif choice == "q":
                    os.system('clear')
                    self.commit_db(conn)
                    break
  
             #self.room_run_script(conn,roomid)
+
+        def report_edge(self):
+            print("""
+                        
+                       
+
+      This is the edge of the map
+                        
+                        
+                        
+                        
+            """)
+            
             
 
         def room_run_script(self,conn,roomid):
