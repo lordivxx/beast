@@ -436,7 +436,7 @@ class IVXX(object):
 		self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
 		#self.room_run_script(conn,self.roomid)
                 print("North:w South:s West:a East:d") 
-                print("Status:status Heal:heal Town:town")
+                print("Status:status Heal:heal Train:t Town:qq")
                 choice = self.get_user_input("Choose: ")
                 print("")
                 if choice == "w":
@@ -490,11 +490,21 @@ class IVXX(object):
                    os.system('clear')
                    self.commit_db(conn)
                    break
+                elif choice == "qq":
+                   os.system('clear')
+                   self.commit_db(conn)
+                   break
                 elif choice == "heal":
                    self.visit_healer(conn,200)
                    self.commit_db(conn)
                 elif choice == "status":
                    self.dbreport(conn)
+                   self.commit_db(conn)
+                elif choice == "train":
+                   self.train_gen(conn,30,60)
+                   self.commit_db(conn)
+                elif choice == "t":
+                   self.train_gen(conn,30,60)
                    self.commit_db(conn)
  
             #self.room_run_script(conn,roomid)
@@ -557,3 +567,34 @@ class IVXX(object):
         
         def current_location(self,conn):
             return self.loc
+
+        def train_gen(self,conn,adv_time_lenght,mob_density):
+            adv_time = 1
+            self.fight_function = 'y'
+            self.clear_terminal()
+            while adv_time != adv_time_lenght:
+                if int(self.select_character_stat(conn,'hp')) <= 1:
+                    self.character_dead(conn)
+                    return
+
+                if self.check_for_action(int(mob_density)) == 1:
+                    #print("You hear something!")
+                    #time.sleep(2)
+                    #print(self.mob_name)
+                    #time.sleep(2)
+                    self.dbfight(conn)
+
+                #print(self.check_for_action(5))
+                print('\ \\')
+                if self.check_for_action(int(1)) == 1: 
+                    self.visit_healer(conn,200)
+                    print('{0} finds a potion of revenenation and drinks it.'.format(str(self.select_character_stat(conn,'name'))))
+                    print('Your beast now has {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_character_stat(conn,'hp')),int(self.select_character_stat(conn,'atk')),int(self.select_character_stat(conn,'def'))))
+                    print(':')
+                
+                
+                print('/ /')
+                    
+                time.sleep(.5)
+                adv_time += 1
+            
