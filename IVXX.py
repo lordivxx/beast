@@ -200,31 +200,11 @@ class IVXX(object):
         def hud(self,conn):
                 mob_density = 10
                 while True:
-                    print("North:w South:s West:a East:d")
+                    #print("North:w South:s West:a East:d")
 		    print("Report:1 Fight:2 Adventure:3 Heal:4 Quit:q") 
 		    choice = self.get_user_input("Choose: ")
 		    print("")
-		    if choice == "w":
-                       os.system('clear')
-                       print("moving North")
-                       if self.check_for_action(int(mob_density)) == 1:
-                         self.dbfight(conn)
-                    elif choice == "s":
-                       os.system('clear')
-                       print("moving south")
-                       if self.check_for_action(int(mob_density)) == 1:
-                         self.dbfight(conn)
-                    elif choice == "a":
-                       os.system('clear')
-                       print("moving west")
-                       if self.check_for_action(int(mob_density)) == 1:
-                          self.dbfight(conn)
-                    elif choice == "d":
-                       os.system('clear')
-                       print("moving East")
-                       if self.check_for_action(int(mob_density)) == 1:
-                          self.dbfight(conn)
-                    elif choice == "q":
+                    if choice == "q":
                        self.commit_db(conn)
                        self.close_db(conn)
                        break
@@ -236,10 +216,14 @@ class IVXX(object):
                        self.dbfight(conn)
                     elif choice == "3":
                        os.system('clear')
-                       self.adventure(conn,10,35)
+                       #self.adventure(conn,10,35)
+                       self.adventure2(conn)
                     elif choice == "4":
                        os.system('clear')
                        self.visit_healer(conn,200)
+                    elif choice == "5":
+                       os.system('clear')
+                       self.adventure2(conn)
 
 
 
@@ -406,8 +390,142 @@ class IVXX(object):
                     
                 time.sleep(1)
                 adv_time += 1
-
+        
+        def get_room_id(self,conn,geoidy,geoidx):
+            sql = "SELECT {0} FROM {1} WHERE geoidy={2} AND geoidx={3}".format('id','adv1_map',geoidy,geoidx)
+            #print(sql)
+            cur = conn.cursor()
+            cur.execute(sql)
+            rows = cur.fetchall()
+            for row in rows:
+                #print(row[0])
+                return row[0]
  
+        def get_room_stat_by_id(self,conn,roomid,stat):
+            sql = "SELECT {0} FROM {1} WHERE id={2}".format(str(stat),'adv1_map',roomid)
+            cur = conn.cursor()
+            cur.execute(sql)
+            rows = cur.fetchall()
+            for row in rows:
+                #print(row[0])
+                return row[0]
+ 
+
+        def adventure2(self,conn):
+            self.clear_terminal()
+            print("""
+            
+            
+            
+            
+    Welcome to the 1st Beast Adventure  
+
+            
+
+
+
+
+
+            """)
+
+            self.loc = [0,0]
+	    self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
+	    self.room_run_script(conn,self.roomid)
+            #roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
+            while True:
+		self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
+		#self.room_run_script(conn,self.roomid)
+                print("North:w South:s West:a East:d Quit:q")
+                choice = self.get_user_input("Choose: ")
+                print("")
+                if choice == "w":
+                   os.system('clear')
+                   print("moving North")
+                   #print(self.loc)
+                   loc_check = [self.loc[0],self.loc[1] + 1]
+                   if self.get_room_id(conn,loc_check[0],loc_check[1]):
+                        self.loc = [self.loc[0],self.loc[1] + 1]
+		        self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
+                        self.room_run_script(conn,self.roomid)
+                   else:
+                        print("This is the edge of the map")
+
+                elif choice == "s":
+                   os.system('clear')
+                   print("moving South")
+                   #print(self.loc)
+                   loc_check = [self.loc[0],self.loc[1] - 1]
+                   if self.get_room_id(conn,loc_check[0],loc_check[1]):
+                        self.loc = [self.loc[0],self.loc[1] - 1]
+		        self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
+                        self.room_run_script(conn,self.roomid)
+                   else:
+                        print("This is the edge of the map")
+ 
+                elif choice == "a":
+                   os.system('clear')
+                   print("moving West")
+                   #print(self.loc)
+                   loc_check = [self.loc[0] - 1,self.loc[1]]
+                   if self.get_room_id(conn,loc_check[0],loc_check[1]):
+                        self.loc = [self.loc[0] - 1,self.loc[1]]
+		        self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
+                        self.room_run_script(conn,self.roomid)
+                   else:
+                        print("This is the edge of the map")
+ 
+                elif choice == "d":
+                   os.system('clear')
+                   print("moving East")
+                   #print(self.loc)
+                   loc_check = [self.loc[0] + 1,self.loc[1]]
+                   if self.get_room_id(conn,loc_check[0],loc_check[1]):
+                        self.loc = [self.loc[0] + 1,self.loc[1]]
+		        self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
+                        self.room_run_script(conn,self.roomid)
+                   else:
+                        print("This is the edge of the map")
+ 
+                elif choice == "q":
+                   os.system('clear')
+                   self.commit_db(conn)
+                   break
+ 
+            #self.room_run_script(conn,roomid)
+            
+
+        def room_run_script(self,conn,roomid):
+            #print(roomid)
+            #print(self.get_room_stat_by_id(conn,self.roomid,'disc'))
+            self.room_welcome(conn,self.get_room_stat_by_id(conn,self.roomid,'disc'))
+
+            #if int(self.select_character_stat(conn,'hp')) <= 1:
+            #    self.character_dead(conn)
+            #    return
+
+            #if self.check_for_action(int(mob_density)) == 1:
+            #    self.dbfight(conn)
+
+            #print(self.check_for_action(5))
+            #print('\ \\')
+            #if self.check_for_action(int(1)) == 1: 
+            #    self.visit_healer(conn,200)
+            #    print('{0} finds a potion of revenenation and drinks it.'.format(str(self.select_character_stat(conn,'name'))))
+            #    print('Your beast now has {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_character_stat(conn,'hp')),int(self.select_character_stat(conn,'atk')),int(self.select_character_stat(conn,'def'))))
+            #    print(':')
+            
+        def room_welcome(self,conn,roomdisc):
+            print("""
+
+
+
+      {0}
+      
+      
+      
+      
+      
+            """.format(roomdisc))
         def clear_terminal(self):
             os.system('clear')
 
@@ -415,4 +533,6 @@ class IVXX(object):
             print('{0} has become too weak and must return to town.'.format(str(self.select_character_stat(conn,'name'))))
             #self.hud(conn)
             #RETURN false
-
+        
+        def current_location(self,conn):
+            return self.loc
