@@ -185,11 +185,11 @@ def create_database(conn):
         print("Error! cannot create the database connection.")
 
 def add_rooms(conn):
-    #mobs = [('North Room', 0, 1, 'This is the North Room', 35),
-    #        ('South Room', 0, -1, 'This is the South Room', 1),
-    #        ('East Room', 1, 0, 'This is the East Room', 1),
-    #        ('West Room', -1, 0, 'This is the West Room', 15)]
-    mobs = [('Northeast Room', 1, 1, 'This is the Northeast Room', 35),
+    mobs = [('North Room', 0, 1, 'This is the North Room', 35),
+            ('South Room', 0, -1, 'This is the South Room', 1),
+            ('East Room', 1, 0, 'This is the East Room', 1),
+            ('West Room', -1, 0, 'This is the West Room', 15)],
+            ('Northeast Room', 1, 1, 'This is the Northeast Room', 35),
             ('Southeast Room', 1, -1, 'This is the Southeast Room', 1),
             ('Northwest Room', -1, 1, 'This is the Northwest Room', 1),
             ('Southwest Room', -1, -1, 'This is the Southwest Room', 15),

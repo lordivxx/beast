@@ -435,7 +435,8 @@ class IVXX(object):
             while True:
 		self.roomid = self.get_room_id(conn,self.loc[0],self.loc[1])
 		#self.room_run_script(conn,self.roomid)
-                print("North:w South:s West:a East:d Quit:q")
+                print("North:w South:s West:a East:d") 
+                print("Status:status Heal:heal Town:town")
                 choice = self.get_user_input("Choose: ")
                 print("")
                 if choice == "w":
@@ -485,10 +486,16 @@ class IVXX(object):
                         self.room_run_script(conn,self.roomid)
                    else:
                         self.report_edge() 
-                elif choice == "q":
+                elif choice == "town":
                    os.system('clear')
                    self.commit_db(conn)
                    break
+                elif choice == "heal":
+                   self.visit_healer(conn,200)
+                   self.commit_db(conn)
+                elif choice == "status":
+                   self.dbreport(conn)
+                   self.commit_db(conn)
  
             #self.room_run_script(conn,roomid)
 
@@ -510,13 +517,15 @@ class IVXX(object):
             #print(roomid)
             #print(self.get_room_stat_by_id(conn,self.roomid,'disc'))
             self.room_welcome(conn,self.get_room_stat_by_id(conn,self.roomid,'disc'))
+            time.sleep(2)
 
-            #if int(self.select_character_stat(conn,'hp')) <= 1:
-            #    self.character_dead(conn)
-            #    return
 
-            #if self.check_for_action(int(mob_density)) == 1:
-            #    self.dbfight(conn)
+            if int(self.select_character_stat(conn,'hp')) <= 1:
+                self.character_dead(conn)
+                return
+
+            if self.check_for_action(int(self.get_room_stat_by_id(conn,self.roomid,'mobden'))) == 1:
+               self.dbfight(conn)
 
             #print(self.check_for_action(5))
             #print('\ \\')
