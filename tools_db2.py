@@ -70,6 +70,13 @@ def create_mob(conn,mob):
 
 
 
+def select_all_rooms(conn):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM adv1_map")
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+
 def select_all_character(conn):
     cur = conn.cursor()
     cur.execute("SELECT * FROM character")
@@ -154,22 +161,44 @@ def create_database(conn):
                                         disc text
                                         );"""
 
+    sql_create_adventure_map_table = """CREATE TABLE IF NOT EXISTS adv1_map (
+                                        id integer PRIMARY KEY,
+                                        name text NOT NULL,
+                                        geoidy interger NOT NULL,
+                                        geoidx interger NOT NULL,
+                                        disc text NOT NULL,
+                                        mobden interger NOT NULL
+                                        );"""
+
     if conn is not None:
         # create character table
-        create_table(conn, sql_create_character_table)
-        create_table(conn, sql_create_mob_table)
+        #create_table(conn, sql_create_character_table)
+        #create_table(conn, sql_create_mob_table)
+        create_table(conn, sql_create_adventure_map_table)
         # create mob table
-        characterdetails = (beast_name, beast_hp, beast_atk, beast_def, '1st character');
-        mobdetails = (mob_name, mob_hp, mob_atk, mob_def, '1st mob');
-        character_id = create_character(conn, characterdetails)
-        mob_id = create_mob(conn, mobdetails)
+        #characterdetails = (beast_name, beast_hp, beast_atk, beast_def, '1st character');
+        #mobdetails = (mob_name, mob_hp, mob_atk, mob_def, '1st mob');
+        #character_id = create_character(conn, characterdetails)
+        #mob_id = create_mob(conn, mobdetails)
         commit_db(conn)
     else:
         print("Error! cannot create the database connection.")
 
+def add_rooms(conn):
+    #mobs = [('North Room', 0, 1, 'This is the North Room', 35),
+    #        ('South Room', 0, -1, 'This is the South Room', 1),
+    #        ('East Room', 1, 0, 'This is the East Room', 1),
+    #        ('West Room', -1, 0, 'This is the West Room', 15)]
+    mobs = [('Northeast Room', 1, 1, 'This is the Northeast Room', 35),
+            ('Southeast Room', 1, -1, 'This is the Southeast Room', 1),
+            ('Northwest Room', -1, 1, 'This is the Northwest Room', 1),
+            ('Southwest Room', -1, -1, 'This is the Southwest Room', 15),
+            ('BaseCamp', 0, 0, 'This is the BaseCamp', 15)]
+    cursor = conn.cursor()
+    cursor.executemany('INSERT INTO adv1_map(name, geoidy, geoidx, disc, mobden) VALUES(?,?,?,?,?)''', mobs)
+    conn.commit()
+
 def add_mobs(conn):
-
-
     mobs = [('Rator', 50, 2, 1),
             ('Tauren', 100, 2, 1),
             ('Cat', 75, 15, 1),
@@ -193,8 +222,11 @@ if __name__ == '__main__':
     #x = IVXX(os.environ['USER'],fight_function)
     signal.signal(signal.SIGINT, signal_handler)
     conn = create_connection()
-    select_all_character(conn)
-    select_all_mob(conn)
+    #create_database(conn)
+    add_rooms(conn)
+    #select_all_character(conn)
+    select_all_rooms(conn)
+    #select_all_mob(conn)
     #add_mobs(conn)
     #del_all_mobs(conn)
     #select_all_mob(conn)
