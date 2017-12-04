@@ -501,10 +501,10 @@ class IVXX(object):
                    self.dbreport(conn)
                    self.commit_db(conn)
                 elif choice == "train":
-                   self.train_gen(conn,30,60)
+                   self.train_gen(conn)
                    self.commit_db(conn)
                 elif choice == "t":
-                   self.train_gen(conn,30,60)
+                   self.train_gen(conn)
                    self.commit_db(conn)
  
             #self.room_run_script(conn,roomid)
@@ -568,11 +568,13 @@ class IVXX(object):
         def current_location(self,conn):
             return self.loc
 
-        def train_gen(self,conn,adv_time_lenght,mob_density):
+        def train_gen(self,conn):
             adv_time = 1
+            adv_time_lenght = self.get_user_input("How many sec to Train?: ")
+            mob_density = self.get_user_input("Mob density 1-100: ")
             self.fight_function = 'y'
             self.clear_terminal()
-            while adv_time != adv_time_lenght:
+            while adv_time != int(adv_time_lenght):
                 if int(self.select_character_stat(conn,'hp')) <= 1:
                     self.character_dead(conn)
                     return
