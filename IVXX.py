@@ -224,6 +224,16 @@ class IVXX(object):
                     elif choice == "5":
                        os.system('clear')
                        self.adventure2(conn)
+                    elif choice == "11":
+                       self.print_beast_1()
+                    elif choice == "12":
+                       self.print_beast_2()
+                    elif choice == "13":
+                       self.print_beast_3()
+                    elif choice == "14":
+                       self.print_beast_4()
+                    elif choice == "15":
+                       self.print_beast_5()
 
 
 
@@ -411,6 +421,48 @@ class IVXX(object):
                 return row[0]
 
     
+        def print_beast_1(self):
+       	    print("""
+
+        ,,,    
+       (o o)    
+---ooO--(_)--Ooo---
+
+            """) 
+        def print_beast_2(self):
+       	    print("""
+
+        |"|   
+       _|_|_   
+       (o o)    
+---ooO--(_)--Ooo---
+
+            """) 
+        def print_beast_3(self):
+       	    print("""
+
+      |                                      
+      |.===.   
+      {}o o{}   
+---ooO--(_)--Ooo---
+
+            """) 
+        def print_beast_4(self):
+       	    print("""
+                               
+     `  _ ,  ' 
+    -  (o)o)  - 
+----ooO'(_)--Ooo---
+
+            """) 
+        def print_beast_5(self):
+       	    print("""
+                 
+       ()_()     
+       (o o)     
+---ooO--`o'--Ooo---
+
+            """) 
         def print_beast_title(self):
        	    print("""
             
