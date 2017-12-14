@@ -83,6 +83,7 @@ if __name__ == '__main__':
     #x.update_charcter_stat(conn,'hp',100)
     #x.adventure(conn,120,5)
     #x.select_mob_stat(conn,'name',1)
+    x.print_beast_title()
     x.dbreport(conn)
     x.hud(conn)
     x.close_db(conn)

@@ -409,6 +409,25 @@ class IVXX(object):
             for row in rows:
                 #print(row[0])
                 return row[0]
+
+    
+        def print_beast_title(self):
+       	    print("""
+            
+            
+            
+  o__ __o                                          o     
+ <|     v\                                        <|>    
+ / \     <\                                       < >    
+ \o/     o/    o__  __o      o__ __o/      __o__   |     
+  |__  _<|    /v      |>    /v     |      />  \    o__/_ 
+  |       \  />      //    />     / \     \o       |     
+ <o>      /  \o    o/      \      \o/      v\      |     
+  |      o    v\  /v __o    o      |        <\     o     
+ / \  __/>     <\/> __/>    <\__  / \  _\o__</     <\__
+
+
+            """) 
  
 
         def adventure2(self,conn):
@@ -417,12 +436,7 @@ class IVXX(object):
             
             
             
-            
-    Welcome to the 1st Beast Adventure  
-
-            
-
-
+       Adventure 1
 
 
 
