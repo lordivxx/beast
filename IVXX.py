@@ -248,7 +248,7 @@ class IVXX(object):
  
 	def create_connection(self):
 	    try:
-                dbfile = "{0}/repos/beast/beast.db".format(os.environ['HOME'])
+                dbfile = "{0}/beast.db".format(os.environ['PWD'])
 	        conn = sqlite3.connect(dbfile)
 	        #conn = sqlite3.connect(':memory:')
 	        return conn
