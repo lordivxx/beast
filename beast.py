@@ -23,24 +23,26 @@ requiredNamed = parser.add_argument_group('required named arguments')
 requiredNamed.add_argument("-c", "--charactercfg" , help='The path to a character config file', required=False)
 requiredNamed.add_argument("-m", "--mobcfg" , help='The path to a mob config file', required=False)
 requiredNamed.add_argument("-d", "--dbinit" , help='Init the db', required=False)
-requiredNamed.add_argument("-i", "--interactive" , help='interactive', required=False)
-requiredNamed.add_argument("-f", "--fight_function" , help='fight_function', required=False)
+requiredNamed.add_argument("-i", "--interactive" , help='broken', required=False)
+requiredNamed.add_argument("-f", "--fight_function" , help='y = beast does not update the database for the player at the end of the fight', required=False)
 args = parser.parse_args()
 
 
 ######## Assign Variables  ######
 charactercfg = args.charactercfg
 if charactercfg == None:
-    charactercfg = "/rhome/forsythc/.character.cfg"
+#    charactercfg = "/rhome/forsythc/.character.cfg"
+    charactercfg = "./character.cfg"
 mobcfg = args.mobcfg
 if mobcfg == None:
-    mobcfg = "/rhome/forsythc/.mob.cfg"
+    #mobcfg = "/rhome/forsythc/.mob.cfg"
+    mobcfg = "./mob.cfg"
 
 dbinit = args.dbinit
 interactive = args.interactive
 fight_function = args.fight_function
 if fight_function == None:
-    fight_unction = 'n'
+    fight_function = 'n'
 ######## Functions #########
 
 
