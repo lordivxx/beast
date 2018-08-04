@@ -109,7 +109,10 @@ class IVXX(object):
 		    print ('{0} wins'.format(bname))
 		if mhp > bhp:
 		    print ('{0} wins'.format(mname))
+                
                 self.commit_db(conn)
+            self.add_XP(conn,1)
+            
 
 	def logthis(self,name,value):
 	    logname = './log/beast.log'
@@ -359,7 +362,7 @@ class IVXX(object):
 	def dbreport(self,conn):
 
 	    #with conn:
-            print('Username: {1} and Beast: {0}'.format(str(self.select_character_stat(conn,'name')), str(self.name)))
+            print('Username: {1} and Beast: {0} with XP {2}'.format(str(self.select_character_stat(conn,'name')), str(self.name), int(self.select_character_stat(conn,'XP'))))
             print('{3} has {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_character_stat(conn,'hp')),int(self.select_character_stat(conn,'atk')),int(self.select_character_stat(conn,'def')),str(self.select_character_stat(conn,'name'))))
             #print('There is a {3} in the area with {0} HP, {1} Attack Power, and {2} Defence.'.format(int(self.select_mob_stat(conn,'hp')),int(self.select_mob_stat(conn,'atk')),int(self.select_mob_stat(conn,'def')),str(self.select_mob_stat(conn,'name'))))
 	        #self.select_character_stat(conn,'name')
@@ -488,7 +491,7 @@ class IVXX(object):
             
             
             
-       Adventure 1
+       Gladious 
 
 
 
@@ -572,6 +575,12 @@ class IVXX(object):
                 elif choice == "t":
                    self.train_gen(conn)
                    self.commit_db(conn)
+                elif choice == "l":
+                   os.system('clear')
+                   self.room_run_script(conn,self.roomid)
+                elif choice == "look":
+                   os.system('clear')
+                   self.room_run_script(conn,self.roomid)
  
             #self.room_run_script(conn,roomid)
 
@@ -593,7 +602,7 @@ class IVXX(object):
             #print(roomid)
             #print(self.get_room_stat_by_id(conn,self.roomid,'disc'))
             self.room_welcome(conn,self.get_room_stat_by_id(conn,self.roomid,'disc'))
-            time.sleep(2)
+            #time.sleep(.1)
 
 
             if int(self.select_character_stat(conn,'hp')) <= 1:
@@ -666,3 +675,6 @@ class IVXX(object):
                 time.sleep(.5)
                 adv_time += 1
             
+        def add_XP(self,conn,xp_increase):
+            statupdate = int(self.select_character_stat(conn,'XP')) + xp_increase
+            self.update_charcter_stat(conn,'XP',statupdate)
