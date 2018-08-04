@@ -57,7 +57,8 @@ def signal_handler(signal, frame):
 if __name__ == '__main__':
     
     # Load the class
-    x = IVXX(os.environ['USER'],fight_function)
+    #x = IVXX(os.environ['USER'],fight_function)
+    x = IVXX("ivxx",fight_function)
     signal.signal(signal.SIGINT, signal_handler)
 
 
